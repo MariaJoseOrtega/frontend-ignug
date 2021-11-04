@@ -5,7 +5,7 @@ import {LocationModel} from '@models/core';
 import {EmployeeModel, FormModel, ReasonModel} from '@models/license-work';
 import {ActivatedRoute, Router} from "@angular/router";
 import {BreadcrumbService} from "@services/core/breadcrumb.service";
-import {MessageService} from "@services/core";
+import {CoreHttpService, MessageService} from "@services/core";
 import {LicenseWorkHttpService} from "@services/license-work";
 import {ApplicationModel} from "@models/license-work";
 
@@ -31,9 +31,8 @@ export class ApplicationFormComponent implements OnInit {
 
   yearRange: string = `1900:${(new Date()).getFullYear()}`;
 
-  private coreHttpService: any;
-
   constructor(
+    private coreHttpService: CoreHttpService,
     private formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -90,8 +89,6 @@ export class ApplicationFormComponent implements OnInit {
       type: [false, [Validators.required]],
       dateStartedAt: [null, [Validators.required]],
       dateEndedAt: [null, [Validators.required]],
-      timeStartedAt: [null, [Validators.required]],
-      timeEndedAt: [null, [Validators.required]],
       observations: this.formBuilder.array([this.formBuilder.control(null, Validators.required)]),
     });
   }
@@ -149,7 +146,7 @@ export class ApplicationFormComponent implements OnInit {
   }
 
   loadLocations() {
-    /*this.subscriptions.push(
+    this.subscriptions.push(
       this.coreHttpService.getLocations('PROVINCE')
         .subscribe(
           response => {
@@ -157,7 +154,7 @@ export class ApplicationFormComponent implements OnInit {
           }, error => {
             this.messageService.error(error);
           }
-        ));*/
+        ));
   }
 
   addObservations(data: string = '') {
@@ -247,12 +244,6 @@ export class ApplicationFormComponent implements OnInit {
   }
   get dateEndedAtField() {
     return this.form.controls['dateEndedAt'];
-  }
-  get timeStartedAtField() {
-    return this.form.controls['timeStartedAt'];
-  }
-  get timeEndedAtField() {
-    return this.form.controls['timeEndedAt'];
   }
   get observationsField(): FormArray{
     return this.form.controls['observations']as FormArray;
